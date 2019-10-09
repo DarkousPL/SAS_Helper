@@ -1,6 +1,6 @@
 /*>>> Sekcja z komentarzami: 
- Step1 Download all data 
- Step2 Download part of data Further I will processing that 
+Step1 Download all data
+Step2 Download part of data Further I will processing that
 <<<*/ 
 
 
