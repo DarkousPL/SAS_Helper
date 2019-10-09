@@ -2,15 +2,15 @@
 
 data outdata;
 set something;
-    aa = bb;
+    aa   =   bb;
 run;
 
 /*# Step1 Download all data */
 Proc sql;
 Create table aa as
 Select
-a.*
-From aeae a
+a.*     
+From  aeae a
 ;quit;
 
 /*#
@@ -26,5 +26,5 @@ a.col1
 ,a.col3
 ,a.col4
 ,a.col5
-From tabeles
+From tabeles a
 ;quit;
