@@ -1,6 +1,7 @@
 selected_file = r'C:\Users\Darkous\01_SAS_Helper\Files\file1.txt'
 output_file = r'C:\Users\Darkous\01_SAS_Helper\Files\result1.txt'
 
+# Own tag: where start and end block of comment which application should search
 tab_start = '/*#'
 tab_end = '*/'
 
@@ -29,7 +30,7 @@ def while_replace(string):
 with open(selected_file, 'r') as f:
     for line in f:
         line_strip = while_replace(line.strip())
-        # Get footer
+        # Get heading
         if '#Autor' in line_strip:
             Author = line_strip[7:].strip()
         elif '#Zleceniodawca' in line_strip:
@@ -62,9 +63,7 @@ with open(selected_file, 'r') as f:
 
 with open(output_file, 'w') as w:
     w.write('\n /*>>> Sekcja z komentarzami: \n\n')
-
-#Create new footer
-with open(output_file, 'a') as w:
+#Create new heading
     w.write(' #Autor: ' + Author + '\n')
     w.write(' #Zleceniodawca: ' + Client + '\n')
     w.write(' #Data stworzenia: ' + Create_date + '\n')
@@ -74,7 +73,6 @@ with open(output_file, 'a') as w:
     for i in sentences_dict:
         w.write(' '.join(sentences_dict[i]))
         w.write('\n')
-
     w.write('\n <<<*/ \n\n')
 
 # rewrite old file to new file (exept old footer)
@@ -87,4 +85,3 @@ with open(output_file, 'a') as w:
 
             if (ignore_text != True) & ('<<<*/' not in line):
                 w.write(line)
-
