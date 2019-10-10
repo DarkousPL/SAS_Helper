@@ -20,16 +20,13 @@ sentences_dict = {}
 sentences_list = []
 iter = 0
 
-# Function which removing all additionally white spaces where are more than one
-def while_replace(string):
-    while '  ' in string:
-        string = string.replace('  ', ' ')
-    return string
-
 # Main program
 with open(selected_file, 'r') as f:
     for line in f:
-        line_strip = while_replace(line.strip())
+        line_strip = line.strip()
+        while '  ' in line_strip:    
+            line_strip = line_strip.replace('  ', ' ')
+            
         # Get heading
         if '#Autor' in line_strip:
             Author = line_strip[7:].strip()
@@ -41,14 +38,14 @@ with open(selected_file, 'r') as f:
             BuisnessOwner = line_strip[22:].strip()
 
         for word in line_strip.split(' '):
-            if word[0:3] == tab_start:
+            if word[0:len(tab_start)] == tab_start:
                 iter += 1
                 #print(word)
                 start_var = True
-                word = word[4:]
-            if (start_var == True) & (word[-2:] == tab_end):
+                word = word[len(tab_start):]
+            if (start_var == True) & (word[-len(tab_end):] == tab_end):
                 #print(word)
-                word = word[:-2]
+                word = word[:-len(tab_end)]
                 end_var = True
 
             if (start_var == True):
@@ -75,7 +72,7 @@ with open(output_file, 'w') as w:
         w.write('\n')
     w.write('\n <<<*/ \n\n')
 
-# rewrite old file to new file (exept old footer)
+# rewrite old file to new file (exept old heading)
     with open(selected_file, 'r') as f:
         for line in f:
             if '/*>>>' in line:
