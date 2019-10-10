@@ -1,7 +1,16 @@
-/*>>> Sekcja z komentarzami: 
-Step1 Download all data
-Step2 Download part of data Further I will processing that
-<<<*/ 
+
+ /*>>> Sekcja z komentarzami: 
+
+ #Autor: 
+ #Zleceniodawca: 
+ #Data stworzenia: 
+ #W³aœciciel biznesowy: 
+
+ Step1 Download all data 
+ Step2 Download part of data Further I will processing that 
+
+ <<<*/ 
+
 
 
 data outdata;
