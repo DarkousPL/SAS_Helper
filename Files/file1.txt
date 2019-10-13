@@ -5,11 +5,11 @@ set something;
     aa   =   bb;
 run;
 
-/*# Step1 Download all data */
+/*# Step1 Download all data v2 */
 Proc sql;
 Create table aa as
-Select
-a.*     
+	Select
+	a.*     
 From  aeae a
 ;quit;
 
@@ -20,11 +20,11 @@ Further I will processing that
 
 Proc sql;
 Create table nextTab as
-Select
-a.col1
-,a.col2
-,a.col3
-,a.col4
-,a.col5
+	Select
+	a.col1
+	,a.col2
+	,a.col3
+	,a.col4
+	,a.col5
 From tabeles a
 ;quit;
