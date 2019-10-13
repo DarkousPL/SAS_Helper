@@ -8,11 +8,9 @@ import re as re
 # 3. Rozwojowo - posiadać dwa różne tagi, /*# i np /*##
 # 4. Umożliwić iteracje od nowa kroków (Krok_001, Krok_002 itd)
 
-
 # Parameters of program
 #selected_file = r'C:\Users\Darkous\01_SAS_Helper\Files\file1.txt'
 #output_file =   r'C:\Users\Darkous\01_SAS_Helper\Files\result1.txt'
-domain = os.environ['userdomain']
 
 ###############################################################################
 # Own parameters: which user can use or changes
@@ -97,7 +95,6 @@ def przetworz_plik(selected_file, output_file, **kwargs):
                     string = dict_param['new_step'] + var + string[re.search(dict_param['old_step'] + "\w+", string).end():]
                     iter_krok += 1
                 w.write(string)
-                print(string)
                 w.write('\n')
         w.write('\n <<<*/ \n\n')
 
@@ -132,7 +129,7 @@ def zmien_parametr(answer):
 
 # ===============================================================================================================
 # MAIN PROGRAM 
-print("Witaj " + domain + ".", "\nJeżeli chcesz zakończyć aplikację wpisz 'q',", 
+print("Witaj " + os.environ['userdomain'] + ".", "\nJeżeli chcesz zakończyć aplikację wpisz 'q',", 
       "\njak chcesz zmienić parametry wpisz 'config',",
       "\njak chcesz przetworzyć plik wpisz 'jedziemy', ",
       "\npotrzebujesz obejrzeć aktualne parametry wpisz 'help'.".format(domain))
@@ -150,13 +147,15 @@ while True:
                                                                                                          dict_param['tab_end']))
     elif answer.lower().startswith("jedziemy"):
         selected_file = input("Wprowadź ścieżkę i plik który chcesz przetworzyć: ")
-        output_file = input("Wprowadź ścieżkę i plik który ma być plikiem wynikowym: ")
+        output_file = input("Wprowadź ścieżkę i plik który ma być plikiem wynikowym (kliknij enter aby użyć poprzedni wpis i wygenerować plik z dopiskiem _corr): ")
+        if output_file == '':
+            output_file = selected_file[:-4] + "_corr" + selected_file[-4:]
         przetworz_plik(selected_file, output_file, tab_start=dict_param['tab_start'], 
                                                     tab_end=dict_param['tab_end'], 
                                                     old_step=dict_param['old_step'], 
                                                     new_step=dict_param['new_step'], 
                                                     check_iter=dict_param['check_iter'])
-        print("Plik został przetworzony. \n")
+        print("Plik został przetworzony. \nWynik przetworzenia: ", output_file)
     elif answer.lower().startswith("q"):
         print("Program został zakończony.")
         sys.exit()
