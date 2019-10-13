@@ -143,12 +143,10 @@ def zmien_parametr(answer):
 
 # ===============================================================================================================
 # MAIN PROGRAM 
-print("Witaj " + os.environ['userdomain'],
-      "\nWersja programu: 0.90",
-      "\n - Jeżeli chcesz zakończyć aplikację wpisz 'q'", 
-      "\n - jak chcesz zmienić parametry wpisz 'config'",
-      "\n - jak chcesz przetworzyć plik wpisz 'jedziemy' ",
-      "\n - potrzebujesz obejrzeć aktualne parametry wpisz 'help'")
+print("Witaj " + os.environ['userdomain'] + ".", "\nJeżeli chcesz zakończyć aplikację wpisz 'q',", 
+      "\njak chcesz zmienić parametry wpisz 'config',",
+      "\njak chcesz przetworzyć plik wpisz 'jedziemy', ",
+      "\npotrzebujesz obejrzeć aktualne parametry wpisz 'help'.")
 
 #MAIN LOOP
 while True:
@@ -157,7 +155,7 @@ while True:
         zmien_parametr(input("Wpisz który parametr chcesz zmienić:"))
     elif answer.lower().startswith("help"):
         # print(show_parameters())
-        print("Twoje aktualne parametry:\n - old_step = {}\n - new_step = {}\n - check_iter = {}\n - tab_start = {}\n - tab_end = {}".format(dict_param['old_step'],
+        print("Twoje aktualne parametry:\nold_step = {}, new_step = {}, check_iter = {}, \ntab_start = {}, tab_end = {}".format(dict_param['old_step'],
                                                                                                          dict_param['new_step'],
                                                                                                          dict_param['check_iter'], 
                                                                                                          dict_param['tab_start'], 
@@ -176,8 +174,6 @@ while True:
     elif answer.lower().startswith("q"):
         print("Program został zakończony.")
         sys.exit()
-    else:
-        print("Polecenia nie rozpoznano.")
 
 
         
