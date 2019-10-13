@@ -99,8 +99,6 @@ def przetworz_plik(selected_file, output_file, **kwargs):
             if (ignore_text != True) & ('<<<*/' not in old_line):
                     w.write(old_line)
 
-przetworz_plik(selected_file, output_file, tab_start=dict_param['tab_start'], tab_end=dict_param['tab_end'])
-
 # Function where user can change parameters
 def zmien_parametr(answer):
     if answer.lower().startswith("var_iter"):
@@ -120,9 +118,12 @@ def zmien_parametr(answer):
 
 # ===============================================================================================================
 # MAIN PROGRAM 
-print("Witaj {}. \nJeżeli chcesz zakończyć aplikację wpisz 'q'," "\njak chcesz zmienić parametry wpisz 'config',\njak chcesz przetworzyć plik wpisz 'jedziemy', \npotrzebujesz informacji wpisz 'help'.".format(domain))
+print("Witaj {}. \nJeżeli chcesz zakończyć aplikację wpisz 'q',", 
+      "\njak chcesz zmienić parametry wpisz 'config',"
+      "\njak chcesz przetworzyć plik wpisz 'jedziemy', "
+      "\npotrzebujesz informacji wpisz 'help'.".format(domain))
+
 while True:
-    
     answer = input('Co takiego chcesz zrobić?:')
     if answer.lower().startswith("config"):
         zmien_parametr(input("Wpisz który parametr chcesz zmienić:"))
@@ -131,6 +132,12 @@ while True:
                                                                                                          dict_param['check_iter'], 
                                                                                                          dict_param['tab_start'], 
                                                                                                          dict_param['tab_end']))
+    elif answer.lower().startswith("jedziemy"):
+        przetworz_plik(selected_file, output_file, tab_start=dict_param['tab_start'], tab_end=dict_param['tab_end'])
+        print("Plik został przetworzony. \n")
     elif answer.lower().startswith("q"):
         print("Program został zakończony.")
         sys.exit()
+
+
+        
