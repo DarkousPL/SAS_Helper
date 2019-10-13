@@ -1,5 +1,6 @@
 import os
 import sys
+import re as re
 
 #Poprawki do zrobienia:
 #VVV # 1. Tylko raz ma otwierać plik (ładować go do pamięci)
@@ -9,15 +10,15 @@ import sys
 
 
 # Parameters of program
-selected_file = r'C:\Users\Darkous\01_SAS_Helper\Files\file1.txt'
-output_file =   r'C:\Users\Darkous\01_SAS_Helper\Files\result1.txt'
+#selected_file = r'C:\Users\Darkous\01_SAS_Helper\Files\file1.txt'
+#output_file =   r'C:\Users\Darkous\01_SAS_Helper\Files\result1.txt'
 domain = os.environ['userdomain']
-
 
 ###############################################################################
 # Own parameters: which user can use or changes
 dict_param = {
-  "var_iter": 'Krok_000',
+  "old_step": 'Step_',
+  "new_step": 'Krok_',
   "check_iter": 'n',
   "tab_start": '/*#',
   'tab_end': '*/'
@@ -66,7 +67,7 @@ def przetworz_plik(selected_file, output_file, **kwargs):
                     end_var = True
 
                 if start_var:
-                        sentences_list.append(word)
+                    sentences_list.append(word)
 
                 if end_var:
                     start_var = False
@@ -84,9 +85,20 @@ def przetworz_plik(selected_file, output_file, **kwargs):
         w.write(' #Właściciel biznesowy: ' + BuisnessOwner + '\n\n')
 
     # rewrite new comments
+        iter_krok = 1
         for i in sentences_dict:
-            w.write(' '.join(sentences_dict[i]))
-            w.write('\n')
+            if kwargs['check_iter'] == 'n':
+                w.write(' '.join(sentences_dict[i]))
+                w.write('\n')
+            elif kwargs['check_iter'] == 't':
+                string = ' '.join(sentences_dict[i])
+                if dict_param['old_step'] in string:
+                    var = str(iter_krok).zfill(3)
+                    string = dict_param['new_step'] + var + string[re.search(dict_param['old_step'] + "\w+", string).end():]
+                    iter_krok += 1
+                w.write(string)
+                print(string)
+                w.write('\n')
         w.write('\n <<<*/ \n\n')
 
     # rewrite old file to new file (exept old heading)
@@ -101,11 +113,13 @@ def przetworz_plik(selected_file, output_file, **kwargs):
 
 # Function where user can change parameters
 def zmien_parametr(answer):
-    if answer.lower().startswith("var_iter"):
-        dict_param['var_iter'] = input("Wprowadź nową wartość: ")
-        print("Parametr został zmieniony na: {}".format(dict_param['var_iter']))
+    if answer.lower().startswith("old_step"):
+        dict_param['old_step'] = input("Wprowadź nową wartość: ")
+        print("Parametr został zmieniony na: {}".format(dict_param['old_step']))
+    elif answer.lower().startswith("new_step"):
+        dict_param['new_step'] = input("Wprowadź nową wartość: ")
+        print("Parametr został zmieniony na: {}".format(dict_param['new_step']))
     elif answer.lower().startswith("check_iter"):
-        #dict_param['check_iter'] = 
         odp = input("Wprowadź wartość, może być 't' lub 'n': ")
         if odp in ('t', 'n'):
             dict_param['check_iter'] = odp
@@ -118,22 +132,30 @@ def zmien_parametr(answer):
 
 # ===============================================================================================================
 # MAIN PROGRAM 
-print("Witaj {}. \nJeżeli chcesz zakończyć aplikację wpisz 'q',", 
-      "\njak chcesz zmienić parametry wpisz 'config',"
-      "\njak chcesz przetworzyć plik wpisz 'jedziemy', "
-      "\npotrzebujesz informacji wpisz 'help'.".format(domain))
+print("Witaj " + domain + ".", "\nJeżeli chcesz zakończyć aplikację wpisz 'q',", 
+      "\njak chcesz zmienić parametry wpisz 'config',",
+      "\njak chcesz przetworzyć plik wpisz 'jedziemy', ",
+      "\npotrzebujesz obejrzeć aktualne parametry wpisz 'help'.".format(domain))
 
+#MAIN LOOP
 while True:
     answer = input('Co takiego chcesz zrobić?:')
     if answer.lower().startswith("config"):
         zmien_parametr(input("Wpisz który parametr chcesz zmienić:"))
     elif answer.lower().startswith("help"):
-        print("Twoje aktualne parametry:\nvar_iter = {}, check_iter = {}, \ntab_start = {}, tab_end = {}".format(dict_param['var_iter'], 
+        print("Twoje aktualne parametry:\nold_step = {}, new_step = {}, check_iter = {}, \ntab_start = {}, tab_end = {}".format(dict_param['old_step'],
+                                                                                                         dict_param['new_step'],
                                                                                                          dict_param['check_iter'], 
                                                                                                          dict_param['tab_start'], 
                                                                                                          dict_param['tab_end']))
     elif answer.lower().startswith("jedziemy"):
-        przetworz_plik(selected_file, output_file, tab_start=dict_param['tab_start'], tab_end=dict_param['tab_end'])
+        selected_file = input("Wprowadź ścieżkę i plik który chcesz przetworzyć: ")
+        output_file = input("Wprowadź ścieżkę i plik który ma być plikiem wynikowym: ")
+        przetworz_plik(selected_file, output_file, tab_start=dict_param['tab_start'], 
+                                                    tab_end=dict_param['tab_end'], 
+                                                    old_step=dict_param['old_step'], 
+                                                    new_step=dict_param['new_step'], 
+                                                    check_iter=dict_param['check_iter'])
         print("Plik został przetworzony. \n")
     elif answer.lower().startswith("q"):
         print("Program został zakończony.")

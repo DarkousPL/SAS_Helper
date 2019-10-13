@@ -5,7 +5,7 @@ set something;
     aa   =   bb;
 run;
 
-/*# Step1 Download all data v2 */
+/*# Step_001 Download all data v2 */
 Proc sql;
 Create table aa as
 	Select
@@ -14,7 +14,7 @@ From  aeae a
 ;quit;
 
 /*#
-Step2 Download part of data
+Step_003 Download part of data
 Further I will processing that 
 */
 
