@@ -9,8 +9,8 @@ import re as re
 # 4. Umożliwić iteracje od nowa kroków (Krok_001, Krok_002 itd) (ZROBIONE)
 
 # Parameters of program
-#selected_file = r'\\saswds\Risk\RISK_DATABASE\105_REFORECAST\105_04_Doposażenie_corr2.sas'
-#output_file =   r'\\saswds\Risk\RISK_DATABASE\105_REFORECAST\105_04_Doposażenie_corrrr.sas'
+#selected_file = r'C:\Users\karol.janeczek\Desktop\Python\105.sas'
+#output_file =   r'C:\Users\karol.janeczek\Desktop\Python\105_corr.sas'
 
 ###############################################################################
 # Own parameters: which user can use or changes
@@ -22,6 +22,46 @@ dict_param = {
   'tab_end': '*/'
 }
 
+# Class with parameters
+class Parameters:
+    def __init__(self, old_step, new_step, check_iter, tab_start, tab_end):
+        self.old_step = old_step
+        self.new_step = new_step
+        self.check_iter = check_iter
+        self.tab_start = tab_start
+        self.tab_end = tab_end
+    
+    def show_Info(self):
+        print("Twoje aktualne parametry programu: ")
+        print("old_step     =   {}".format(self.old_step))
+        print("new_step     =   {}".format(self.new_step))
+        print("check_iter   =   {}".format(self.check_iter))
+        print("tab_start    =   {}".format(self.tab_start))
+        print("tab_end      =   {}".format(self.tab_end))
+        #print("==========================================")
+
+    def change_old_step(self, old_step):
+        self.old_step = old_step
+
+    def change_new_step(self, new_step):
+        self.new_step = new_step
+
+    def change_check_iter(self, check_iter):
+        self.check_iter = check_iter
+
+    def change_tab_start(self, tab_start):
+        self.tab_start = tab_start
+
+    def change_tab_end(self, tab_end):
+        self.tab_end = tab_end
+# Initialize: class with parameters
+Param1 = Parameters(dict_param["old_step"], 
+           dict_param["new_step"], 
+           dict_param["check_iter"], 
+           dict_param["tab_start"], 
+           dict_param["tab_end"])
+
+# Main function
 def przetworz_plik(selected_file, output_file, **kwargs):
     #print("Przekazano do słownika: ", kwargs)
     #print("Typ parametru to: ", type(kwargs))
@@ -40,7 +80,7 @@ def przetworz_plik(selected_file, output_file, **kwargs):
 
     with open(selected_file, 'r') as f:
         for line in f:
-            file_list.append(line)
+            file_list.append(line) 
             line_strip = line.strip()
             while '  ' in line_strip:    
                 line_strip = line_strip.replace('  ', ' ')
@@ -75,15 +115,16 @@ def przetworz_plik(selected_file, output_file, **kwargs):
                     sentences_list = []
                     #print(ile)
 
+# == Start write new file
     with open(output_file, 'w') as w:
         w.write('\n /*>>> Sekcja z komentarzami: \n\n')
-    #Create new heading
+    #Create new header
         w.write(' #Autor: ' + Author + '\n')
         w.write(' #Zleceniodawca: ' + Client + '\n')
         w.write(' #Data stworzenia: ' + Create_date + '\n')#
         w.write(' #Właściciel biznesowy: ' + BuisnessOwner + '\n\n')
 
-    # rewrite new comments
+    # == rewrite new comments
         iter_krok = 1
         for i in sentences_dict:
             if kwargs['check_iter'] == 'n':
@@ -99,7 +140,7 @@ def przetworz_plik(selected_file, output_file, **kwargs):
                 w.write('\n')
         w.write('\n <<<*/ \n\n')
 
-    # rewrite old file to new file (exept old heading)
+    # rewrite old file to new file (exept old header)
         iter_krok = 1
         for old_line in file_list:
             if '/*>>>' in old_line:
@@ -127,63 +168,64 @@ def przetworz_plik(selected_file, output_file, **kwargs):
                     if (dict_param['tab_end'] in old_line) & replace_text:
                         replace_text = False
 
-#################################
 
 # Function where user can change parameters
 def zmien_parametr(answer):
-    # print(show_parameters())
     if answer.lower().startswith("old_step"):
-        dict_param['old_step'] = input("Wprowadź nową wartość: ")
-        print("Parametr został zmieniony na: {}".format(dict_param['old_step']))
+        Param1.change_old_step(input("Wprowadź nową wartość: "))
+        print("Parametr został zmieniony na: {}".format(Param1.old_step))
+
     elif answer.lower().startswith("new_step"):
-        dict_param['new_step'] = input("Wprowadź nową wartość: ")
-        print("Parametr został zmieniony na: {}".format(dict_param['new_step']))
+        Param1.change_new_step(input("Wprowadź nową wartość: "))
+        print("Parametr został zmieniony na: {}".format(Param1.new_step))
+
     elif answer.lower().startswith("check_iter"):
         odp = ''
         while odp not in ('t', 'n'):
-            odp = input("Wprowadź wartość, może być 't' lub 'n': ")
+            odp = input("Wprowadź nową wartość: ")
             if odp in ('t', 'n'):
-                dict_param['check_iter'] = odp
-                print("Zmieniono parametr na: ", dict_param['check_iter'])
+                Param1.change_check_iter(odp)
             else:
-                print("Niepoprawny parametr. Wprowadź raz jeszcze.")
+                odp = input("Niepoprawny parametr: może to być tylko 't' bądź 'n'.\nWprowadź ponownie parametr: ")
+        print("Parametr został zmieniony na: {}".format(Param1.check_iter))
+
+    elif answer.lower().startswith("tab_start"):
+        Param1.change_tab_start(input("Wprowadź nową wartość: "))
+        print("Parametr został zmieniony na: {}".format(Param1.tab_start))
+
+    elif answer.lower().startswith("tab_end"):
+        Param1.change_tab_end(input("Wprowadź nową wartość: "))
+        print("Parametr został zmieniony na: {}".format(Param1.tab_end))
+
     else:
         print(" < < < < < Nieznana komenda. > > > > > ")
 
-
+user = os.getlogin()[:os.getlogin().find('.')].capitalize()  + " " + os.getlogin()[os.getlogin().find('.')+1:].capitalize() 
 # ===============================================================================================================
 # MAIN PROGRAM 
-
-print("Witaj " + os.getlogin(),
-      "\nWersja programu: 0.92",
+print("Witaj " + user,
+      "\nWersja programu: 0.93",
       "\n - Jeżeli chcesz zakończyć aplikację wpisz 'q'", 
       "\n - jak chcesz zmienić parametry wpisz 'config'",
       "\n - jak chcesz przetworzyć plik wpisz 'jedziemy' ",
       "\n - potrzebujesz obejrzeć aktualne parametry wpisz 'help'")
 
-#MAIN LOOP
+# MAIN CONSOLE LOOP
 while True:
     print('------------------------------------\n')
     answer = input('Co takiego chcesz zrobić?:')
     if answer.lower().startswith("config"):
+        Param1.show_Info()
         zmien_parametr(input("Wpisz który parametr chcesz zmienić:"))
     elif answer.lower().startswith("help"):
-        # print(show_parameters())
-        print("Twoje aktualne parametry:\n - old_step = {}\n - new_step = {}\n - check_iter = {}\n - tab_start = {}\n - tab_end = {}".format(dict_param['old_step'],
-                                                                                                         dict_param['new_step'],
-                                                                                                         dict_param['check_iter'], 
-                                                                                                         dict_param['tab_start'], 
-                                                                                                         dict_param['tab_end']))
+        Param1.show_Info()
     elif answer.lower().startswith("jedziemy"):
         selected_file = input("Wprowadź ścieżkę i plik który chcesz przetworzyć: ").replace("'",'').replace('"','')
         output_file = input("Wprowadź ścieżkę i plik który ma być plikiem wynikowym (kliknij enter aby użyć poprzedni wpis i wygenerować plik z dopiskiem _corr): ")
         if output_file == '':
             output_file = selected_file[:-4] + "_corr" + selected_file[-4:]
-        przetworz_plik(selected_file, output_file, tab_start=dict_param['tab_start'], 
-                                                    tab_end=dict_param['tab_end'], 
-                                                    old_step=dict_param['old_step'], 
-                                                    new_step=dict_param['new_step'], 
-                                                    check_iter=dict_param['check_iter'])
+        przetworz_plik(selected_file, output_file, tab_start=Param1.tab_start, tab_end=Param1.tab_end, 
+                      old_step=Param1.old_step, new_step=Param1.new_step, check_iter=Param1.check_iter)
         print("Plik został przetworzony. \nWynik przetworzenia: ", output_file)
         print('Powrót do linii podstawowych komend.')
     elif answer.lower().startswith("q"):
